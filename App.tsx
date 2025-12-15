@@ -8,6 +8,7 @@ import Index from './src/screens/Index';
 import Login from './src/screens/(Login)/Login';
 import Signup from './src/screens/(Signup)/Signup';
 import Home from './src/screens/(Home)/Home';
+import Products from './src/screens/(Products)/Products';
 import './global.css';
 
 enableScreens();
@@ -32,7 +33,11 @@ const App = () => {
         screenOptions={{ headerShown: false }}
       >
         {userToken ? (
+         <>
           <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Products" component={Products} />
+         </>
+
         ) : (
           <>
             <Stack.Screen name="Index" component={Index} />
