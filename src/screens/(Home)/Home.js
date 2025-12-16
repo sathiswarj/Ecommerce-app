@@ -1,16 +1,22 @@
-import { View, Text, TouchableOpacity, Image, SafeAreaView, ScrollView, StatusBar, Alert } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image, SafeAreaView, ScrollView, StatusBar, Alert, Modal } from 'react-native';
+import React, { useState, useEffect, use } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import exchange_img from '../../../assets/exchange_icon.png';
 import hero_img from "../../../assets/hero_img.png";
-import { Menu, ShoppingBag, ArrowRight } from 'lucide-react-native';
+import { Menu, ShoppingBag, ArrowRight, X } from 'lucide-react-native';
 import { ApiRequestGet } from '../../../data/service/ApiGetRequest';
 import ProductCard from '../../components/ProductCard';
-
+import { useNavigation } from '@react-navigation/native';
 const Home = () => {
   const { logout, userData } = useAuth();
   const [allProducts, setAllProducts] = useState([]);
-  const [bestSellers, setBestSellers] = useState([]); 
+  const [bestSellers, setBestSellers] = useState([]);
+  const [showLink, setShowLink] = useState(false);
+  const navigation = useNavigation();
+
+  const handleProductPress = (product) => {
+    navigation.navigate('Product', { product });
+  }
 
   const handleMenuPress = () => {
     Alert.alert(
@@ -44,24 +50,32 @@ const Home = () => {
   const fetchAllProducts = async () => {
     try {
       const response = await ApiRequestGet.getAllProducts();
-       
+
       if (response?.success && response?.data) {
-         const bestSellerProducts = response.data.filter(product => product.bestSeller);
+        const bestSellerProducts = response.data.filter(product => product.bestSeller);
         const regularProducts = response.data.filter(product => !product.bestSeller);
-        
+
         setAllProducts(regularProducts);
         setBestSellers(bestSellerProducts);
- 
       }
     } catch (error) {
-      console.error('Error fetching products:', error); 
+      console.error('Error fetching products:', error);
       Alert.alert('Error', 'Failed to load products. Please try again.');
     }
   };
 
   useEffect(() => {
     fetchAllProducts();
-  }, []);  
+  }, []);
+
+
+  const navLinks = [
+    { name: 'Home', screen: 'Home' },
+    { name: 'Profile', screen: 'Profile' },
+    { name: 'Orders', screen: 'Orders' },
+    { name: 'Settings', screen: 'Settings' },
+    { name: 'Logout' },
+  ];
 
   return (
     <>
@@ -81,14 +95,6 @@ const Home = () => {
               </Text>
             </View>
           </View>
-
-          <TouchableOpacity
-            className="p-2.5 rounded-full bg-gray-100"
-            activeOpacity={0.7}
-            onPress={handleMenuPress}
-          >
-            <Menu size={24} color="#000" />
-          </TouchableOpacity>
         </View>
 
         <ScrollView
@@ -124,36 +130,36 @@ const Home = () => {
             </View>
           </View>
 
-           {bestSellers.length > 0 && (
+          {bestSellers.length > 0 && (
             <View className="px-5 py-8 ">
               <View className="flex-row items-center justify-between mb-6">
                 <View className="flex-row items-center gap-2 ">
-                 <Text className="text-sm font-semibold text-gray-600 tracking-widest">
-                  OUR BEST SELLERS
-                </Text>
-              </View>
+                  <Text className="text-sm font-semibold text-gray-600 tracking-widest">
+                    OUR BEST SELLERS
+                  </Text>
+                </View>
                 <View className="bg-yellow-400 px-3 py-1 rounded-full">
                   <Text className="text-xs font-bold text-gray-800">
                     ⭐ TOP PICKS
                   </Text>
                 </View>
               </View>
-              <ProductCard data={bestSellers} setData={setBestSellers} />
+              <ProductCard data={bestSellers} setData={setBestSellers} handleProductPress={handleProductPress} />
             </View>
           )}
 
-           {allProducts.length > 0 && (
+          {allProducts.length > 0 && (
             <View className="px-5 py-8 bg-white">
-               <View className="flex-row items-center gap-2 ">
-                 <Text className="text-sm font-semibold text-gray-600 tracking-widest">
+              <View className="flex-row items-center gap-2 ">
+                <Text className="text-sm font-semibold text-gray-600 tracking-widest">
                   LATERST COLLECTIONS
                 </Text>
               </View>
-              <ProductCard data={allProducts} setData={setAllProducts} />
+              <ProductCard data={allProducts} setData={setAllProducts} handleProductPress={handleProductPress} />
             </View>
           )}
 
-           {bestSellers.length === 0 && allProducts.length === 0 && (
+          {bestSellers.length === 0 && allProducts.length === 0 && (
             <View className="px-5 py-16 items-center justify-center">
               <Text className="text-gray-500 text-lg">No products available</Text>
             </View>

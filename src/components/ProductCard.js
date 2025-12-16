@@ -1,7 +1,7 @@
 import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 
-export default function ProductCard({ data, setData }) {
+export default function ProductCard({ data, handleProductPress }) {
   if (!data || data.length === 0) {
     return (
       <View className="flex-1 justify-center items-center py-8">
@@ -11,10 +11,10 @@ export default function ProductCard({ data, setData }) {
   }
 
   const renderProduct = ({ item }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       className="bg-white rounded-lg shadow-md p-4 mr-4 w-40"
       activeOpacity={0.7}
-    >
+      onPress={() => handleProductPress(item)}    >
       {item.images && item.images.length > 0 && (
         <Image
           source={{ uri: item.images[0] }}
@@ -45,7 +45,7 @@ export default function ProductCard({ data, setData }) {
     <FlatList
       data={data}
       renderItem={renderProduct}
-      keyExtractor={(item, index) => item.productId }
+      keyExtractor={(item, index) => item.productId}
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ paddingVertical: 8 }}
