@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, StatusBar, Animated } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { ShoppingBag, ArrowRight, Sparkles, TrendingUp, Shield } from 'lucide-react-native';
+import { ShoppingBag, ArrowRight  } from 'lucide-react-native';
 
 const Index = () => {
     const navigation = useNavigation();
@@ -21,7 +21,7 @@ const Index = () => {
                 useNativeDriver: true,
             }),
         ]).start();
-    }, []);
+    }, [fadeAnim, slideAnim]);
 
     return (
         <>

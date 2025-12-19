@@ -15,34 +15,9 @@ const Home = () => {
   const navigation = useNavigation();
 
   const handleProductPress = (product) => {
-    navigation.navigate('Product', { product });
+    navigation.navigate('ProductDetail', { product });
   }
-
-  const handleMenuPress = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel'
-        },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await logout();
-            } catch (error) {
-              console.error('Logout error:', error);
-              Alert.alert('Error', 'Failed to logout. Please try again.');
-            }
-          }
-        }
-      ]
-    );
-  };
-
+ 
   const handleShopNow = () => {
     console.log('Shop now pressed');
   };
