@@ -26,11 +26,11 @@ export const ApiRequestGet = {
     });
   },
 
-  getOneProduct: async (id) => {
+  getOneProduct: async (productId) => {
     const token = await getUserToken();  
 
     return ApiGetServiceWrapper({
-      url: API_ENDPOINT.corePath + `products/${id}`, 
+      url: API_ENDPOINT.corePath + `products/${productId}`, 
       headers: { 
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`

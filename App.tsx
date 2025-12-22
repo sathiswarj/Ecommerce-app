@@ -8,7 +8,8 @@ import Index from './src/screens/Index';
 import Login from './src/screens/(Login)/Login';
 import Signup from './src/screens/(Signup)/Signup';
 import TabNavigator from './src/(tabs)/index';
-import ProductDetail from './src/screens/(Product)/Product'; // Add this
+import ProductDetail from './src/screens/(Product)/Product'; 
+import Settings from './src/screens/(Settings)/Settings';
 import './global.css';
 
 enableScreens();
@@ -35,7 +36,8 @@ const App = () => {
         {userToken ? (
           <>
             <Stack.Screen name="MainTabs" component={TabNavigator} />
-            <Stack.Screen name="ProductDetail" component={ProductDetail} />  
+            <Stack.Screen name="ProductDetail" component={ProductDetail} />
+            <Stack.Screen name="Settings" component={Settings} />  
           </>
         ) : (
           <>

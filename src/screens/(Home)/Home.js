@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, SafeAreaView, ScrollView, StatusBar, Alert, Modal } from 'react-native';
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import exchange_img from '../../../assets/exchange_icon.png';
 import hero_img from "../../../assets/hero_img.png";
@@ -8,14 +8,14 @@ import { ApiRequestGet } from '../../../data/service/ApiGetRequest';
 import ProductCard from '../../components/ProductCard';
 import { useNavigation } from '@react-navigation/native';
 const Home = () => {
-  const { logout, userData } = useAuth();
+  const {  userData } = useAuth();
   const [allProducts, setAllProducts] = useState([]);
   const [bestSellers, setBestSellers] = useState([]);
   const [showLink, setShowLink] = useState(false);
   const navigation = useNavigation();
 
   const handleProductPress = (product) => {
-    navigation.navigate('ProductDetail', { product });
+    navigation.navigate('ProductDetail', { productId: product.productId });
   }
  
   const handleShopNow = () => {
@@ -43,15 +43,7 @@ const Home = () => {
     fetchAllProducts();
   }, []);
 
-
-  const navLinks = [
-    { name: 'Home', screen: 'Home' },
-    { name: 'Profile', screen: 'Profile' },
-    { name: 'Orders', screen: 'Orders' },
-    { name: 'Settings', screen: 'Settings' },
-    { name: 'Logout' },
-  ];
-
+ 
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />

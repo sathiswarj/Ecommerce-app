@@ -1,21 +1,79 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import React, { useState } from 'react';
+import { View, Text, Image, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { ArrowLeft, ShoppingCart, Heart } from 'lucide-react-native';
-
+import { ApiRequestGet } from '../../../data/service/ApiGetRequest';
 const { width } = Dimensions.get('window');
 
 export default function ProductDetail({ route, navigation }) {
-  const { product } = route.params;
+  const { productId } = route.params;
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleAddToCart = () => {
-    console.log('Adding to cart:', { product, quantity });
+    console.log('Adding to cart:', { productId, quantity });
   };
 
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      try {
+        setLoading(true);
+        const response = await ApiRequestGet.getOneProduct(productId);
+        setProduct(response.data);
+        console.log('Product data:', response.data);
+      } catch (error) {
+        console.error('Error fetching product details:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProductDetails();
+  }, [productId]);
+
+  if (loading) {
+    return (
+      <View className="flex-1 bg-gray-100">
+        <View className="flex-row items-center justify-between px-5 pt-12 pb-4 bg-white">
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            className="w-10 h-10 items-center justify-center rounded-full bg-gray-100"
+          >
+            <ArrowLeft size={24} color="#000" />
+          </TouchableOpacity>
+          <Text className="text-lg font-semibold">Product Details</Text>
+          <View className="w-10 h-10" />
+        </View>
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="#2563eb" />
+        </View>
+      </View>
+    );
+  }
+
+  if (!product) {
+    return (
+      <View className="flex-1 bg-gray-100">
+        <View className="flex-row items-center justify-between px-5 pt-12 pb-4 bg-white">
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            className="w-10 h-10 items-center justify-center rounded-full bg-gray-100"
+          >
+            <ArrowLeft size={24} color="#000" />
+          </TouchableOpacity>
+          <Text className="text-lg font-semibold">Product Details</Text>
+          <View className="w-10 h-10" />
+        </View>
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-gray-500">Product not found</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
-    <View className="flex-1 bg-white">
-      <View className="flex-row items-center justify-between px-4 pt-12 pb-4 bg-white">
+    <View className="flex-1 bg-gray-100">
+      <View className="flex-row items-center justify-between px-5 pt-12 pb-4 bg-white">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           className="w-10 h-10 items-center justify-center rounded-full bg-gray-100"
@@ -44,24 +102,26 @@ export default function ProductDetail({ route, navigation }) {
         </View>
 
         {product.images && product.images.length > 1 && (
-
           <View className='flex-row px-4 py-2'>
-            {product.images.map((imgUrl, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => setSelectedImage(index)}>
-                <Image
-                  source={{ uri: imgUrl }}
-                  className={`w-20 h-20 rounded-lg mr-3 ${selectedImage === index ? 'border-2 border-blue-600' : 'border border-gray-300'}`}
-                  resizeMode="cover"
-                />
-              </TouchableOpacity>
-            ))}
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {product.images.map((imgUrl, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => setSelectedImage(index)}>
+                  <Image
+                    source={{ uri: imgUrl }}
+                    className={`w-20 h-20 rounded-lg mr-3 ${selectedImage === index ? 'border-2 border-blue-600' : 'border border-gray-300'}`}
+                    resizeMode="cover"
+                  />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
         )}
+        
         <View className="px-4 py-4">
           <Text className="text-2xl font-bold text-gray-900 mb-2">
-            {product.name || 'Product Name'}
+            {product.name ? product.name.charAt(0).toUpperCase() + product.name.slice(1) : 'Product'}
           </Text>
 
           <Text className="text-3xl font-bold text-blue-600 mb-4">
@@ -89,14 +149,16 @@ export default function ProductDetail({ route, navigation }) {
             </View>
           </View>
 
-          <View className="mb-6">
-            <Text className="text-lg font-semibold text-gray-900 mb-2">
-              Description
-            </Text>
-            <Text className="text-base text-gray-600 leading-6">
-              {product.description || 'No description available for this product.'}
-            </Text>
-          </View>
+          {product.description && (
+            <View className="mb-4">
+              <Text className="text-lg font-semibold text-gray-900 mb-2">
+                Description
+              </Text>
+              <Text className="text-base text-gray-600 leading-6">
+                {product.description.charAt(0).toUpperCase() + product.description.slice(1)}
+              </Text>
+            </View>
+          )}
 
           {product.category && (
             <View className="mb-4">
@@ -112,8 +174,7 @@ export default function ProductDetail({ route, navigation }) {
               <Text className="text-lg font-semibold text-gray-900 mb-2">
                 Availability
               </Text>
-              <Text className={`text-base font-medium ${product.stock > 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
+              <Text className={`text-base font-medium ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {product.stock > 0 ? `In Stock (${product.stock} available)` : 'Out of Stock'}
               </Text>
             </View>
