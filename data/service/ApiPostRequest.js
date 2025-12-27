@@ -1,5 +1,5 @@
 import { API_ENDPOINT } from "./ApiEndPoint";
-import { ApiPostServiceWrapper } from "../WrapperService";
+import { ApiPostServiceWrapper,ApiPutServiceWrapper } from "../WrapperService";
 import { getUserToken } from "../../utils/storage";
 
 export const ApiPostRequest = {
@@ -29,4 +29,18 @@ export const ApiPostRequest = {
       body: { otp },
     });
   },
+
+   updateUser: async(data) => {
+    const token = await getUserToken(); 
+
+    return ApiPutServiceWrapper({
+      url: API_ENDPOINT.corePath + "users/adduser",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: data,
+    });
+  },
+
 };
