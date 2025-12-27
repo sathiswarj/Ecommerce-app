@@ -1,9 +1,7 @@
 import { View, Text, TouchableOpacity, Image, SafeAreaView, ScrollView, StatusBar, Alert, Modal } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
-import exchange_img from '../../../assets/exchange_icon.png';
-import hero_img from "../../../assets/hero_img.png";
-import { Menu, ShoppingBag, ArrowRight, X } from 'lucide-react-native';
+ import { Menu, ShoppingBag, ArrowRight, X } from 'lucide-react-native';
 import { ApiRequestGet } from '../../../data/service/ApiGetRequest';
 import ProductCard from '../../components/ProductCard';
 import { useNavigation } from '@react-navigation/native';
@@ -50,11 +48,7 @@ const Home = () => {
       <SafeAreaView className="flex-1 bg-white">
         <View className="flex-row justify-between items-center px-5 py-4 bg-white shadow-sm">
           <View className="flex-row items-center gap-2">
-            <Image
-              source={exchange_img}
-              className="w-12 h-12"
-              resizeMode="contain"
-            />
+            
             <View>
               <Text className="text-xs text-gray-500">Welcome back</Text>
               <Text className="text-sm font-bold text-gray-800">
@@ -71,12 +65,7 @@ const Home = () => {
           <View className="bg-gradient-to-b from-gray-50 to-white">
 
             <View className="flex flex-row gap-6 relative">
-              <Image
-                source={hero_img}
-                className="absolute inset-0 w-full h-full"
-                resizeMode="cover"
-              />
-
+              
               <View className="flex-1 justify-center z-10 px-6 py-8">
                 <Text className="text-4xl font-bold text-black/70 mb-3 leading-tight">
                   Latest{'\n'}Arrivals
