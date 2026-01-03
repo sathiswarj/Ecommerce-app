@@ -9,6 +9,7 @@ import Login from './src/screens/(Login)/Login';
 import Signup from './src/screens/(Signup)/Signup';
 import TabNavigator from './src/(tabs)/index';
 import ProductDetail from './src/screens/(Product)/Product'; 
+import Cart from './src/screens/(Cart)/Cart';
 import Settings from './src/screens/(Settings)/Settings';
 import './global.css';
 
@@ -38,6 +39,7 @@ const App = () => {
             <Stack.Screen name="MainTabs" component={TabNavigator} />
             <Stack.Screen name="ProductDetail" component={ProductDetail} />
             <Stack.Screen name="Settings" component={Settings} />  
+            <Stack.Screen name="Cart" component={Cart} />  
           </>
         ) : (
           <>

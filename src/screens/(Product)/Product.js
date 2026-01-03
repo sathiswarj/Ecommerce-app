@@ -2,17 +2,27 @@ import { View, Text, Image, ScrollView, TouchableOpacity, Dimensions, ActivityIn
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, ShoppingCart, Heart } from 'lucide-react-native';
 import { ApiRequestGet } from '../../../data/service/ApiGetRequest';
-const { width } = Dimensions.get('window');
+import { ApiPostRequest } from '../../../data/service/ApiPostRequest';
+import { useNavigation } from '@react-navigation/native';
 
-export default function ProductDetail({ route, navigation }) {
+
+export default function ProductDetail({ route }) {
+  const navigation = useNavigation()
   const { productId } = route.params;
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const handleAddToCart = async () => {
+    try {
+      const response = await ApiPostRequest.addToCart({ productId, quantity });
+      if (response) {
+        navigation.navigate('Cart')
+      }
+    } catch (error) {
+      console.error('Error in add to cart:', error);
 
-  const handleAddToCart = () => {
-    console.log('Adding to cart:', { productId, quantity });
+    }
   };
 
   useEffect(() => {
@@ -118,7 +128,7 @@ export default function ProductDetail({ route, navigation }) {
             </ScrollView>
           </View>
         )}
-        
+
         <View className="px-4 py-4">
           <Text className="text-2xl font-bold text-gray-900 mb-2">
             {product.name ? product.name.charAt(0).toUpperCase() + product.name.slice(1) : 'Product'}

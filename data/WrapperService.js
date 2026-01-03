@@ -122,3 +122,23 @@ export const ApiPatchServiceWrapper = async ({ url = "", headers = {}, body = {}
     throw error;
   }
 };
+
+
+export const ApiDeleteServiceWrapper = async ({ url = "", headers = {} }) => {
+  try {
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+        ...headers,
+      },
+    });
+    return await handleResponse(res);
+  } catch (error) {
+    console.error('❌ API DELETE Error:', error);
+    throw error;
+  }
+};
+

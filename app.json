@@ -1,4 +1,10 @@
 {
   "name": "MyProject",
-  "displayName": "MyProject"
+  "displayName": "MyProject",
+  "icon": "./assets/exchange_icon.png",
+  "splash": {
+    "image": "./assets/exchange_icon.png",
+    "resizeMode": "contain",
+    "backgroundColor": "#ffffff"
+  }
 }
